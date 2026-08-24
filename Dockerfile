@@ -6,7 +6,9 @@ COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
 COPY src/ src/
 
-RUN chmod +x mvnw && ./mvnw package -DskipTests -DfinalName=app
+RUN chmod +x mvnw && ./mvnw package -DskipTests \
+	&& packaged_jar=$(find target -maxdepth 1 -type f -name '*.jar' ! -name '*.original' | head -n 1) \
+	&& cp "$packaged_jar" target/app.jar
 
 FROM eclipse-temurin:21-jre
 
